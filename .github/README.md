@@ -1,7 +1,9 @@
 # Автоматизація тестування з GitHub Actions
 
 ## Крок 1: Створення репозиторію
+
 Створено GitHub-репозиторій `actions`, що містить три файли:
+
 - `app.py`
 - `test_app.py`
 - `.github/workflows/python-app.yml`
@@ -9,6 +11,7 @@
 ## Крок 2: Створення файлів
 
 ### `app.py`
+
 ```python
 class Figure:
     def __init__(self, type, length) -> None:
@@ -24,6 +27,7 @@ class Figure:
 ```
 
 ### `test_app.py`
+
 ```python
 from app import Figure
 
@@ -34,6 +38,7 @@ def test_get_angles():
 ```
 
 ### `.github/workflows/python-app.yml`
+
 ```yaml
 name: Python application
 
@@ -72,9 +77,65 @@ jobs:
 
 Створили файл `README.md` з коротким описом проєкту.
 
----
+## Крок 5: Ручний запуск Workflow
 
-## Готово!
-Проєкт автоматично проганяє тести при кожному push/pull request до `main`.
+### Додано можливість ручного запуску:
 
+```yaml
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+```
+
+## Крок 6: Cron запуск за розкладом
+
+```yaml
+on:
+  schedule:
+    - cron: '30 12 * * 1'  # кожен понеділок о 12:30
+```
+
+## Крок 7: Декілька Workflow
+
+Створено два окремі Workflow з іменами:
+
+- `python-app.yml`
+- `manual-workflow.yml`
+
+Кожен з них відображається у вкладці **Actions** на GitHub.
+
+## Крок 8: Декілька Jobs
+
+```yaml
+jobs:
+  name_one:
+    name: Run first Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: First
+        run: echo "First"
+  name_two:
+    name: Run Second Job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Second
+        run: echo "Second"
+```
+
+## Крок 9: Умовне виконання
+
+```yaml
+- name: Send greeting
+  run: echo "Hello ${{ github.event.inputs.name }}"
+  if: github.event.inputs.name != 'Executer'
+```
+
+## Крок 10: Бейджі у README.md
+
+```md
+![Python application](https://github.com/Kaena0/actions/actions/workflows/python-app.yml/badge.svg)
+```
+
+##
 
